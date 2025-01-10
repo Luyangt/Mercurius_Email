@@ -27,23 +27,23 @@ passport.use(
     //First Argument: GoogleStrategy Configuration
     new GoogleStartegy(
     {
-    clientID: keys.googleClientID,
-    clientSecret:keys.googleClientSecret,
-    callbackURL: '/auth/google/callback' 
+      clientID: keys.googleClientID,
+      clientSecret:keys.googleClientSecret,
+      callbackURL: "/auth/google/callback",
+      proxy: true 
     }, 
     //Second Argument: Callback Function
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ gooleId: profile.id}).then (existingUser => {
-        if (existingUser) {
-          // we already have a record wiht the given profile ID
-          done(null, existingUser); //null means no error
-        } else {
-          // we don't have a user record with this ID, make a new record
-          //create a new instance of a user
-          new User({ googleId: profile.id}).save().then (user => done(null, user)); 
-        }
-       })
-      
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ gooleId: profile.id})
+      if (existingUser) {
+        // we already have a record wiht the given profile ID
+        return done(null, existingUser); //null means no error
+      } else {
+        // we don't have a user record with this ID, make a new record
+        //create a new instance of a user
+        const user = await new User({ googleId: profile.id }).save()
+        done(null, user);
+      }
     }
   )
 );

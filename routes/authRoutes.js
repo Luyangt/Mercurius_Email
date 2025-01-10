@@ -17,15 +17,19 @@ module.exports = (app) => {
     //Callback Route: Handles the response after Google authenticates the user.
     //The user comes back with the ticket, 
     //and the counter processes it (authenticates the user).
-
-    app.get('/auth/google/callback', passport.authenticate('google'));
+    app.get(
+        '/auth/google/callback', 
+        passport.authenticate('google'),
+        (req, res) => {
+            res.redirect('/surveys');
+        }
+    );
 
     //This route is used to logout the user.
     app.get('/api/logout', (req, res) => {
         //logout is a function that is attached to the request object by passport
         req.logout();
-        //send back the user object
-        res.send(req.user);
+        res.redirect('/');
     });
 
     //This route is used to test if the user is authenticated.
