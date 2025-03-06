@@ -1,5 +1,5 @@
-const keys = require("../config/keys");
-const stripe = require("stripe")(keys.stripSecretKey);
+const keys = require("../config/dev");
+const stripe = require("stripe")( keys.stripeSecretKey);
 const requireLogin = require("../middlewares/requireLogin");
 const router = require("express").Router();
 
