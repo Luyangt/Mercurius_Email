@@ -1,41 +1,42 @@
-const passport = require('passport');
+const passport = require("passport");
+//Creates a new Express router for handling routes.
+const router = require("express").Router();
 
-module.exports = (app) => {
-
-    //Initiation Route: Initiates the authentication process.
-    //The user asks for a ticket (starts authentication).
-    // They’re sent to another window (Google login page).
-    app.get(
-        //first argument: if anyone visit with this, they should be directed to the next argument
-        '/auth/google',   
-        //second argument
-        passport.authenticate('google', {  
-        scope: ['profile', 'email'] //asking google to give us permission for these
-    })
+//When a user visits /auth/google, this starts the Google login process.(直接在passport官网找)
+/**
+ * The path is inside .route() to make it more modular, and the function inside .get(...) is the callback.
+ */
+router.route("/auth/google")
+    .get(
+        passport.authenticate('google', {
+            scope: ['profile', 'email']
+        })
     );
-
-    //Callback Route: Handles the response after Google authenticates the user.
-    //The user comes back with the ticket, 
-    //and the counter processes it (authenticates the user).
-    app.get(
-        '/auth/google/callback', 
-        passport.authenticate('google'),
-        (req, res) => {
-            res.redirect('/surveys');
+router.route("/auth/google/callback")
+    .get(
+        passport.authenticate('google', { failureRedirect: "/" }),  //If authentication fails, the user is redirected to / (home page).
+        //req, res This allows more custom logic after login (e.g., logging user info, setting additional session data, etc.).
+        (req,res) => {
+            res.redirect("/surveys"); //If login is successful, the user is redirected to /surveys.
         }
     );
 
-    //This route is used to logout the user.
-    app.get('/api/logout', (req, res) => {
-        //logout is a function that is attached to the request object by passport
+router.route("/api/logout")
+    .get((req, res) => {
         req.logout();
-        res.redirect('/');
+        res.redirect("/")
     });
 
-    //This route is used to test if the user is authenticated.
-    // It sends back the user object stored in the session.
-    app.get('/api/current_user', (req, res) => {
+router.route("/api/current_user")
+    .get((req, res) => {
         res.send(req.user);
     });
 
-};
+/**
+ * module.exports = router; makes the router object available for use in other files.
+	It is part of Node.js module system and allows sharing routes between different parts of an Express app.
+    in index.js:
+    require("./routes/authRoutes") imports the router from authRoutes.js.
+    app.use("/", authRoutes); registers all routes inside authRoutes.js.
+ */
+module.exports = router;
