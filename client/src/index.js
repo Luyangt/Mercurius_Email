@@ -10,6 +10,7 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App';
 import reducers from './reducers';
 
+
 //createStore is a function that creates a new instance of the redux store
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
