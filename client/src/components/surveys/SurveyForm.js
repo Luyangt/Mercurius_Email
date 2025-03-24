@@ -24,7 +24,12 @@ class SurveyForm extends Component {
     render() {
         return (
             <div>
+                //
                 <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)}>
+                    /**
+                     表单提交时，调用 this.props.handleSubmit，这是 Redux Form 提供的机制，
+                     会先做验证（validate），再交给 onSurveySubmit 函数处理。
+                     */
                     {this.renderFields()}
                     <Link to="/surveys" className="red btn-flat white-text">
                         Cancel
@@ -53,6 +58,10 @@ function validate(values) {
     return errors;
 }
 
+//使用 reduxForm 包装 SurveyForm 组件，这样 SurveyForm 就可以访问 Redux Store 了。
+// validate：表单验证函数，返回错误对象。
+// form：表单名称，可以有多个表单。
+// destroyOnUnmount：是否在组件销毁时销毁表单数据。
 export default reduxForm({
     validate,
     form: 'surveyForm',

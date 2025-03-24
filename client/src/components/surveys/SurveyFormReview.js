@@ -7,6 +7,7 @@ import _ from "lodash"
 import * as actions from "../../actions";
 
 const SurveyFormReview = ({ onCancel, formValues, submitSurvey, history}) => {
+    //显示所有字段及用户填写的值
     const reviewFields = _.map(formFields, ({name, label}) => {
         return (
             <div key={name}>
@@ -25,7 +26,7 @@ const SurveyFormReview = ({ onCancel, formValues, submitSurvey, history}) => {
                 className="yellow darken-4 white-text btn-flat"
                 onClick={onCancel}
             >
-             Back
+             Back 
             </button>
             <button
                 onClick={() => submitSurvey(formValues, history)}
@@ -38,6 +39,7 @@ const SurveyFormReview = ({ onCancel, formValues, submitSurvey, history}) => {
     );
 }
 
+//提取 Redux 中表单的数据
 function mapStateToProps(state) {
     return {
         formValues: state.form.surveyForm.values

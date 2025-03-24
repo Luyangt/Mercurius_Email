@@ -9,7 +9,7 @@ import Dashboard from './Dashboard';
 import SurveyNew from './surveys/SurveyNew';
 
 class App extends Component {
-    componentDidMount() {
+    componentDidMount() { // 页面加载时自动获取用户数据
         this.props.fetchUser();
     }
 
